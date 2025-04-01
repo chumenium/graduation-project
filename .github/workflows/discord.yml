@@ -1,3 +1,4 @@
+cat <<EOF > .github/workflows/discord.yml
 name: Notify Discord on Push
 
 on:
@@ -9,10 +10,11 @@ jobs:
   discord-notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Send push message to Discord
-        uses: Ilshidur/action-discord@master
+      - name: Notify Discord
+        uses: tsickert/discord-webhook@v5
         with:
-          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-          message: |
-            🚀 Push detected on **graduation-project** by ${{ github.actor }}
-            �� [View Commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          webhook-url: \${{ secrets.DISCORD_WEBHOOK }}
+          content: |
+            🚀 Push detected by \${{ github.actor }} on \${{ github.repository }}
+            🔗 [View Commit](https://github.com/\${{ github.repository }}/commit/\${{ github.sha }})
+EOF
