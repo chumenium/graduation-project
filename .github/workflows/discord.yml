@@ -13,7 +13,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d "{\"content\": \":rocket: Push by ${{ github.actor }} to \`${{ github.repository }}\`\nCommit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}\"}" \
-            $DISCORD_WEBHOOK
+  curl -H "Content-Type: application/json" \
+    -X POST \
+    -d "{\"content\": \":rocket: Push by ${{ github.actor }} to \`${{ github.repository }}\`\", \"embeds\": []}" \
+    $DISCORD_WEBHOOK
