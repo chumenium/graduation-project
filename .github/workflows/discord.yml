@@ -1,4 +1,3 @@
-cat <<EOF > .github/workflows/discord.yml
 name: Notify Discord on Push
 
 on:
@@ -13,8 +12,7 @@ jobs:
       - name: Notify Discord
         uses: tsickert/discord-webhook@v5
         with:
-          webhook-url: \${{ secrets.DISCORD_WEBHOOK }}
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           content: |
-            🚀 Push detected by \${{ github.actor }} on \${{ github.repository }}
-            🔗 [View Commit](https://github.com/\${{ github.repository }}/commit/\${{ github.sha }})
-EOF
+            🚀 Push detected by ${{ github.actor }} on ${{ github.repository }}
+            🔗 [View Commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
