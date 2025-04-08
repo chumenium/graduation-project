@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 
-void main() {
+import 'screens/auth_pages/login_page.dart';
+import 'screens/main_pages/main_navigation.dart'; // ← BottomNavigation含む画面
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -21,50 +30,34 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.system, // OSの設定に応じて自動切り替え
-      home: const MainNavigation(),
+      themeMode: ThemeMode.system,
+      home: const AuthGate(), // ← ここが切り替え処理
     );
   }
 }
 
-class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
-
-  @override
-  State<MainNavigation> createState() => _MainNavigationState();
-}
-
-class _MainNavigationState extends State<MainNavigation> {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = const [
-    Center(child: Text("ホーム")),
-    Center(child: Text("解決したい！")),
-    Center(child: Text("相談する")),
-    Center(child: Text("支払い")),
-    Center(child: Text("マイページ")),
-  ];
-
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'ホーム'),
-          NavigationDestination(icon: Icon(Icons.list), label: '解決したい！'),
-          NavigationDestination(icon: Icon(Icons.add_circle), label: '相談する'),
-          NavigationDestination(icon: Icon(Icons.payment), label: '支払い'),
-          NavigationDestination(icon: Icon(Icons.person), label: 'マイページ'),
-        ],
-      ),
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(), // ← ログイン状態を監視
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasData) {
+          // ログイン済み → ホーム（ナビゲーションつき）
+          return const MainNavigation();
+        } else {
+          // 未ログイン → ログインページ
+          return const LoginPage();
+        }
+      },
     );
   }
 }

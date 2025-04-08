@@ -5,7 +5,6 @@ import 'post_screen.dart';
 import 'payment_screen.dart';
 import 'mypage_screen.dart';
 
-
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
 
@@ -16,22 +15,32 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomeScreen(),
-    const SolvedScreen(),
-    const PostScreen(),
-    const PaymentScreen(),
-    const MypageScreen(), // ← 忘れてないかチェック
-  ];
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      const HomeScreen(),
+      const SolvedScreen(),
+      const PostScreen(),
+      const PaymentScreen(),
+      const MypageScreen(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
+          debugPrint("Tapped index: $index");
           setState(() {
             _currentIndex = index;
           });
