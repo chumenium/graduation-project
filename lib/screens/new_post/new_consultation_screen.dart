@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NewConsultationScreen extends StatefulWidget {
-  const NewConsultationScreen({Key? key}) : super(key: key);
+  const NewConsultationScreen({super.key});
 
   @override
   State<NewConsultationScreen> createState() => _NewConsultationScreenState();
