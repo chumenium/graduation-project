@@ -52,30 +52,39 @@ class _MypageScreenState extends State<MypageScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('マイページ')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              children: [
-                _buildUserInfoSection(),
-                const Divider(),
-                _buildBalanceSection(),
-                const Divider(),
-                _buildMenuSection('履歴', historyItems),
-                const Divider(),
-                _buildMenuSection('支払い関係', paymentItems),
-                const Divider(),
-                _buildMenuSection('設定', settingItems),
-                const Divider(),
-                _buildMenuSection('規約', policyItems),
-                const Divider(),
-                _buildLogoutTile(),
-              ],
-            ),
-    );
-  }
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: const Text('マイページ')),
+    body: isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16), // ← ここで右寄せ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildUserInfoSection(),
+                    const Divider(),
+                    _buildBalanceSection(),
+                    const Divider(),
+                    _buildMenuSection('履歴', historyItems),
+                    const Divider(),
+                    _buildMenuSection('支払い関係', paymentItems),
+                    const Divider(),
+                    _buildMenuSection('設定', settingItems),
+                    const Divider(),
+                    _buildMenuSection('規約', policyItems),
+                    const Divider(),
+                    _buildLogoutTile(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+  );
+}
+
 
   Widget _buildUserInfoSection() {
     return Padding(
