@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart'; // ← 追加
 import 'firebase_options.dart';
+import 'utils/theme_notifier.dart'; // ← 追加
 
 import 'screens/auth_pages/login_page.dart';
 import 'screens/main_pages/main_navigation.dart'; // ← BottomNavigation含む画面
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeNotifier(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -18,6 +26,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return MaterialApp(
       title: '相談マッチングアプリ',
       theme: ThemeData(
@@ -27,11 +37,16 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.system,
-      home: const MainNavigation(),
+      themeMode: themeNotifier.themeMode, // ← ここが動的テーマのポイント
+      home: const MainNavigation(), // ← ログインをスキップした状態
+      // 開発終了後は以下に切り替え:
+      // home: const AuthGate(),
     );
   }
 }

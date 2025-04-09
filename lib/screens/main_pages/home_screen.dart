@@ -74,8 +74,7 @@ class HomeScreen extends StatelessWidget {
                       trailing: Text(c['category'] ?? '',
                           style: const TextStyle(
                             fontSize: 12,
-                            color: Colors.white,
-                            backgroundColor: Colors.blueAccent,
+                            color: Color.fromARGB(255, 0, 0, 0),
                           )),
                       onTap: () {
                         // TODO: 詳細画面へ遷移
