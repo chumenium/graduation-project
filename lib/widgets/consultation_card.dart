@@ -17,32 +17,7 @@ class ConsultationCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-<<<<<<< HEAD
             _buildHeader(context),
-=======
-            Row(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    consultation.category,
-                    style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  _formatDate(consultation.createdAt),
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                ),
-              ],
-            ),
->>>>>>> 135192408127b2a55e2dfd91b45e4a1bc750b80a
             const SizedBox(height: 8),
             _buildTitle(),
             const SizedBox(height: 6),
