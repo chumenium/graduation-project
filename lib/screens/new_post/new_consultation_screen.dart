@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../widgets/consultation_input_form.dart';
+import '../../widgets/custom_button.dart';
 
 class NewConsultationScreen extends StatefulWidget {
-  const NewConsultationScreen({super.key});
+  const NewConsultationScreen({Key? key}) : super(key: key);
 
   @override
   State<NewConsultationScreen> createState() => _NewConsultationScreenState();
@@ -9,67 +11,73 @@ class NewConsultationScreen extends StatefulWidget {
 
 class _NewConsultationScreenState extends State<NewConsultationScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _title = '';
-  String _category = 'プログラミング';
-  String _description = '';
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  String _selectedCategory = 'プログラミング';
 
+  /// 投稿処理（モック版）
   void _submitForm() {
-    if (!_formKey.currentState!.validate()) return;
-    _formKey.currentState!.save();
+    if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    // 🔹 本来はFirebaseに送るが、いったんモックで表示
-    print('[投稿内容]');
-    print('タイトル: $_title');
-    print('カテゴリ: $_category');
-    print('内容: $_description');
+    final title = _titleController.text;
+    final description = _descriptionController.text;
+
+    // 🔸 本来は Firebase に送信予定
+    print('[新規相談]');
+    print('タイトル: $title');
+    print('カテゴリ: $_selectedCategory');
+    print('内容: $description');
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('投稿完了（ダミー）')),
+      const SnackBar(content: Text('相談を投稿しました（モック）')),
     );
 
+    _resetForm();
+  }
+
+  /// フォームリセット
+  void _resetForm() {
     _formKey.currentState?.reset();
+    _titleController.clear();
+    _descriptionController.clear();
+    setState(() {
+      _selectedCategory = 'プログラミング';
+    });
+  }
+
+  /// 入力フォームUI
+  Widget _buildForm() {
+    return ConsultationInputForm(
+      formKey: _formKey,
+      titleController: _titleController,
+      descriptionController: _descriptionController,
+      category: _selectedCategory,
+      onCategoryChanged: (val) {
+        setState(() {
+          _selectedCategory = val ?? 'プログラミング';
+        });
+      },
+    );
+  }
+
+  /// 投稿ボタンUI
+  Widget _buildSubmitButton() {
+    return CustomButton(
+      label: '相談を投稿する',
+      onPressed: _submitForm,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'タイトル'),
-              onSaved: (value) => _title = value ?? '',
-              validator: (value) =>
-                  value == null || value.isEmpty ? 'タイトルを入力してください' : null,
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              value: _category,
-              items: const [
-                DropdownMenuItem(value: 'プログラミング', child: Text('プログラミング')),
-                DropdownMenuItem(value: 'PCトラブル', child: Text('PCトラブル')),
-              ],
-              onChanged: (value) =>
-                  setState(() => _category = value ?? 'プログラミング'),
-              decoration: const InputDecoration(labelText: 'カテゴリ'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              decoration: const InputDecoration(labelText: '相談内容'),
-              maxLines: 5,
-              onSaved: (value) => _description = value ?? '',
-              validator: (value) =>
-                  value == null || value.isEmpty ? '相談内容を入力してください' : null,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _submitForm,
-              child: const Text('相談を投稿する'),
-            ),
-          ],
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      child: Column(
+        children: [
+          _buildForm(),
+          const SizedBox(height: 20),
+          _buildSubmitButton(),
+        ],
       ),
     );
   }
