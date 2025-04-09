@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'new_consultation_screen.dart';
-import 'ongoing_consultations_screen.dart';
+import '../new_post/new_consultation_screen.dart';
+import '../new_post/ongoing_consultations_screen.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({Key? key}) : super(key: key);
