@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
-      home: const AuthGate(), // ← ここが切り替え処理
+      home: const MainNavigation(),
     );
   }
 }
