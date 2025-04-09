@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart'; // ← 追加
+import 'package:provider/provider.dart';
+
 import 'firebase_options.dart';
-import 'utils/theme_notifier.dart'; // ← 追加
+import 'utils/theme_notifier.dart';
 
 import 'screens/auth_pages/login_page.dart';
-import 'screens/main_pages/main_navigation.dart'; // ← BottomNavigation含む画面
+import 'screens/main_pages/main_navigation.dart';
+
+// ▼ マイページ内遷移先
+import 'screens/my_pages/preference_settings_screen.dart';
+import 'screens/my_pages/profile_settings_screen.dart';
+import 'screens/my_pages/notification_settings_screen.dart';
+import 'screens/my_pages/view_history_screen.dart';
+import 'screens/my_pages/solved_history_screen.dart';
+import 'screens/my_pages/consulted_history_screen.dart';
+import 'screens/my_pages/coupon_screen.dart';
+import 'screens/my_pages/payment_request_screen.dart';
+import 'screens/my_pages/terms_screen.dart';
+import 'screens/my_pages/privacy_policy_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +42,7 @@ class MyApp extends StatelessWidget {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: '相談マッチングアプリ',
       theme: ThemeData(
         brightness: Brightness.light,
@@ -43,10 +57,21 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      themeMode: themeNotifier.themeMode, // ← ここが動的テーマのポイント
-      home: const MainNavigation(), // ← ログインをスキップした状態
-      // 開発終了後は以下に切り替え:
-      // home: const AuthGate(),
+      themeMode: themeNotifier.themeMode,
+      home: const MainNavigation(),
+      // home: const AuthGate(), // ← 本番用はこちらに切り替え
+      routes: {
+  '/view_history': (context) => const ViewHistoryScreen(),
+  '/solved_history': (context) => const SolvedHistoryScreen(),
+  '/consulted_history': (context) => const ConsultedHistoryScreen(),
+  '/coupon': (context) => const CouponScreen(),
+  '/payment_request': (context) => const PaymentRequestScreen(),
+  '/profile_settings': (context) => const ProfileSettingsScreen(),
+  '/notification_settings': (context) => const NotificationSettingsScreen(),
+  '/preference_settings': (context) => const PreferenceSettingsScreen(),
+  '/terms': (context) => const TermsScreen(),
+  '/privacy_policy': (context) => const PrivacyPolicyScreen(),
+},
     );
   }
 }
@@ -57,7 +82,7 @@ class AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(), // ← ログイン状態を監視
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -66,10 +91,8 @@ class AuthGate extends StatelessWidget {
         }
 
         if (snapshot.hasData) {
-          // ログイン済み → ホーム（ナビゲーションつき）
           return const MainNavigation();
         } else {
-          // 未ログイン → ログインページ
           return const LoginPage();
         }
       },
