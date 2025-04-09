@@ -29,14 +29,22 @@ class PaymentScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
+<<<<<<< HEAD
                         Icon(Icons.account_balance_wallet),
                         SizedBox(width: 8),
                         Text('残高: ¥$balance', style: TextStyle(fontSize: 18)),
+=======
+                        const Icon(Icons.account_balance_wallet),
+                        const SizedBox(width: 8),
+                        Text('残高: ¥$balance',
+                            style: const TextStyle(fontSize: 18)),
+>>>>>>> 624ad1f (test)
                       ],
                     ),
                     SizedBox(height: 8),
                     Row(
                       children: [
+<<<<<<< HEAD
                         Icon(Icons.star, color: Colors.orange),
                         SizedBox(width: 8),
                         Text('ポイント: ${points}pt', style: TextStyle(fontSize: 16)),
@@ -44,6 +52,16 @@ class PaymentScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 12),
                     Text(
+=======
+                        const Icon(Icons.star, color: Colors.orange),
+                        const SizedBox(width: 8),
+                        Text('ポイント: ${points}pt',
+                            style: const TextStyle(fontSize: 16)),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+>>>>>>> 624ad1f (test)
                       '※ポイントは支払い金額の5%が自動還元され、次回以降の支払いに使用可能です。',
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
@@ -82,7 +100,8 @@ class PaymentScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            const Text('最近のご利用', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text('最近のご利用',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
 
             const SizedBox(height: 8),
 
