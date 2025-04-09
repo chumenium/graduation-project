@@ -12,15 +12,24 @@ class _MypageScreenState extends State<MypageScreen> {
   User? user;
   bool isLoading = true;
 
-  final List<_MypageItem> items = [
+  final List<_MypageItem> historyItems = [
     _MypageItem(icon: Icons.history, title: '閲覧履歴', route: '/view_history'),
     _MypageItem(icon: Icons.check_circle_outline, title: '解決履歴', route: '/solved_history'),
     _MypageItem(icon: Icons.chat, title: '相談履歴', route: '/consulted_history'),
+  ];
+
+  final List<_MypageItem> paymentItems = [
     _MypageItem(icon: Icons.card_giftcard, title: 'クーポン表示', route: '/coupon'),
     _MypageItem(icon: Icons.account_balance, title: '振込申請', route: '/payment_request'),
+  ];
+
+  final List<_MypageItem> settingItems = [
     _MypageItem(icon: Icons.edit, title: 'プロフィール設定', route: '/profile_settings'),
     _MypageItem(icon: Icons.notifications, title: 'お知らせ・機能設定', route: '/notification_settings'),
     _MypageItem(icon: Icons.settings, title: '環境設定', route: '/preference_settings'),
+  ];
+
+  final List<_MypageItem> policyItems = [
     _MypageItem(icon: Icons.article, title: '利用規約', route: '/terms'),
     _MypageItem(icon: Icons.privacy_tip, title: 'プライバシーポリシー', route: '/privacy_policy'),
   ];
@@ -92,12 +101,23 @@ class _MypageScreenState extends State<MypageScreen> {
 
                 const Divider(),
 
-                ...items.map((item) => ListTile(
-                      leading: Icon(item.icon),
-                      title: Text(item.title),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () => Navigator.pushNamed(context, item.route),
-                    )),
+                _buildSectionTitle('履歴'),
+                ...historyItems.map(_buildListTile),
+
+                const Divider(),
+
+                _buildSectionTitle('支払い関係'),
+                ...paymentItems.map(_buildListTile),
+
+                const Divider(),
+
+                _buildSectionTitle('設定'),
+                ...settingItems.map(_buildListTile),
+
+                const Divider(),
+
+                _buildSectionTitle('規約'),
+                ...policyItems.map(_buildListTile),
 
                 const Divider(),
 
@@ -112,6 +132,25 @@ class _MypageScreenState extends State<MypageScreen> {
                 ),
               ],
             ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _buildListTile(_MypageItem item) {
+    return ListTile(
+      leading: Icon(item.icon),
+      title: Text(item.title),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () => Navigator.pushNamed(context, item.route),
     );
   }
 }
