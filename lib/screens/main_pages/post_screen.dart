@@ -3,7 +3,7 @@ import '../../widgets/consultation_input_form.dart';
 import '../../widgets/custom_button.dart';
 
 class PostScreen extends StatefulWidget {
-  const PostScreen({Key? key}) : super(key: key);
+  const PostScreen({super.key});
 
   @override
   State<PostScreen> createState() => _PostScreenState();
