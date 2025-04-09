@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
 class TermsScreen extends StatefulWidget {
@@ -21,7 +19,7 @@ class _TermsScreenState extends State<TermsScreen> {
 
   Future<void> _loadTerms() async {
     try {
-      final text = await rootBundle.loadString('assets/利用規約.txt');
+      final text = await rootBundle.loadString('assets/terms.txt');
       setState(() {
         _termsText = text;
       });

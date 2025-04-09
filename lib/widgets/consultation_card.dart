@@ -4,7 +4,7 @@ import '../models/consultation_model.dart';
 class ConsultationCard extends StatelessWidget {
   final Consultation consultation;
 
-  const ConsultationCard({Key? key, required this.consultation}) : super(key: key);
+  const ConsultationCard({super.key, required this.consultation});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +24,16 @@ class ConsultationCard extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: color,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     consultation.category,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const Spacer(),

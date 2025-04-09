@@ -4,7 +4,8 @@ class BalanceDisplay extends StatelessWidget {
   final int balance;
   final int points;
 
-  const BalanceDisplay({super.key, required this.balance, required this.points});
+  const BalanceDisplay(
+      {super.key, required this.balance, required this.points});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class BalanceDisplay extends StatelessWidget {
         Column(
           children: [
             const Text("残高", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text("\¥$balance", style: const TextStyle(fontSize: 18)),
+            Text("¥$balance", style: const TextStyle(fontSize: 18)),
           ],
         ),
         Column(
