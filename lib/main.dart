@@ -75,7 +75,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
