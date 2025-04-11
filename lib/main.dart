@@ -61,20 +61,22 @@ class MyApp extends StatelessWidget {
       home: const MainNavigation(),
       // home: const AuthGate(), // ← 本番用はこちらに切り替え
       routes: {
-  '/view_history': (context) => const ViewHistoryScreen(),
-  '/solved_history': (context) => const SolvedHistoryScreen(),
-  '/consulted_history': (context) => const ConsultedHistoryScreen(),
-  '/coupon': (context) => const CouponScreen(),
-  '/payment_request': (context) => const PaymentRequestScreen(),
-  '/profile_settings': (context) => const ProfileSettingsScreen(),
-  '/notification_settings': (context) => const NotificationSettingsScreen(),
-  '/preference_settings': (context) => const PreferenceSettingsScreen(),
-  '/terms': (context) => const TermsScreen(),
-  '/privacy_policy': (context) => const PrivacyPolicyScreen(),
-},
+        '/view_history': (context) => const ViewHistoryScreen(),
+        '/solved_history': (context) => const SolvedHistoryScreen(),
+        '/consulted_history': (context) => const ConsultedHistoryScreen(),
+        '/coupon': (context) => const CouponScreen(),
+        '/payment_request': (context) => const PaymentRequestScreen(),
+        '/profile_settings': (context) => const ProfileSettingsScreen(),
+        '/notification_settings': (context) =>
+            const NotificationSettingsScreen(),
+        '/preference_settings': (context) => const PreferenceSettingsScreen(),
+        '/terms': (context) => const TermsScreen(),
+        '/privacy_policy': (context) => const PrivacyPolicyScreen(),
+      },
     );
   }
 }
+
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 

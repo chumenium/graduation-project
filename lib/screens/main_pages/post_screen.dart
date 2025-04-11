@@ -1,18 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import '../post/new_consultation_screen.dart';
-
-class PostScreen extends StatelessWidget {
-  const PostScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("新規相談"),
-      ),
-      body: NewConsultationScreen(), // ← const を外す
-=======
 import '../../widgets/consultation_input_form.dart';
 import '../../widgets/custom_button.dart';
 
@@ -92,7 +78,6 @@ class _PostScreenState extends State<PostScreen> {
           ],
         ),
       ),
->>>>>>> c5956d3c6543dd91f933e035c2b44e7e2c5969dc
     );
   }
 }

@@ -19,11 +19,7 @@ class Consultation {
       title: data['title'] ?? '',
       category: data['category'] ?? '',
       description: data['description'] ?? '',
-<<<<<<< HEAD
-      createdAt: (data['createdAt'] as DateTime? ?? DateTime.now()),
-=======
       createdAt: (data['createdAt'] as DateTime?) ?? DateTime.now(),
->>>>>>> c5956d3c6543dd91f933e035c2b44e7e2c5969dc
     );
   }
 
