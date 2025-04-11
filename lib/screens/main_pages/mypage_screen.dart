@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../widgets/section_title.dart';
+import '../../widgets/balance_display.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -57,115 +59,99 @@ class _MypageScreenState extends State<MypageScreen> {
     setState(() => isLoading = true);
     user = FirebaseAuth.instance.currentUser;
     await Future.delayed(const Duration(milliseconds: 300));
-    if (mounted) {
-      setState(() => isLoading = false);
-    }
+    if (mounted) setState(() => isLoading = false);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('マイページ')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text('マイページ')),
+        body: isLoading ? _buildLoading() : _buildContent(),
+      );
+
+  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+
+  Widget _buildContent() => ListView(
+        children: [
+          _buildUserInfo(),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ユーザー情報
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: user?.photoURL != null
-                            ? NetworkImage(user!.photoURL!)
-                            : null,
-                        child: user?.photoURL == null
-                            ? const Icon(Icons.person, size: 30)
-                            : null,
-                      ),
-                      const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(user?.displayName ?? 'ユーザー名',
-                              style: const TextStyle(fontSize: 18)),
-                          const SizedBox(height: 4),
-                          const Row(
-                            children: [
-                              Icon(Icons.star, color: Colors.amber, size: 16),
-                              SizedBox(width: 4),
-                              Text('4.5 / 本人確認済み',
-                                  style: TextStyle(fontSize: 14)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
+                const BalanceDisplay(balance: 5000, points: 120),
                 const Divider(),
-
-                const ListTile(
-                  leading: Icon(Icons.account_balance_wallet),
-                  title: Text('残高: ¥5,000 / ポイント: 120pt'),
-                ),
-
+                _buildMenuSection('履歴', historyItems),
                 const Divider(),
-
-                _buildSectionTitle('履歴'),
-                ...historyItems.map(_buildListTile),
-
+                _buildMenuSection('支払い関係', paymentItems),
                 const Divider(),
-
-                _buildSectionTitle('支払い関係'),
-                ...paymentItems.map(_buildListTile),
-
+                _buildMenuSection('設定', settingItems),
                 const Divider(),
-
-                _buildSectionTitle('設定'),
-                ...settingItems.map(_buildListTile),
-
+                _buildMenuSection('規約', policyItems),
                 const Divider(),
+                _buildLogoutTile(),
+              ],
+            ),
+          ),
+        ],
+      );
 
-                _buildSectionTitle('規約'),
-                ...policyItems.map(_buildListTile),
-
-                const Divider(),
-
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text('ログアウト'),
-                  onTap: () async {
-                    await FirebaseAuth.instance.signOut();
-                    if (!mounted) return;
-                    Navigator.pushReplacementNamed(context, '/login');
-                  },
+  Widget _buildUserInfo() => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundImage:
+                  user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
+              child: user?.photoURL == null
+                  ? const Icon(Icons.person, size: 30)
+                  : null,
+            ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(user?.displayName ?? 'ユーザー名',
+                    style: const TextStyle(fontSize: 18)),
+                const SizedBox(height: 4),
+                const Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.amber, size: 16),
+                    SizedBox(width: 4),
+                    Text('4.5 / 本人確認済み', style: TextStyle(fontSize: 14)),
+                  ],
                 ),
               ],
             ),
-    );
-  }
+          ],
+        ),
+      );
 
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
+  Widget _buildMenuSection(String title, List<_MypageItem> items) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SectionTitle(text: title),
+          ...items.map(_buildListTile),
+        ],
+      );
 
-  Widget _buildListTile(_MypageItem item) {
-    return ListTile(
-      leading: Icon(item.icon),
-      title: Text(item.title),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () => Navigator.pushNamed(context, item.route),
-    );
-  }
+  Widget _buildLogoutTile() => ListTile(
+        leading: const Icon(Icons.logout),
+        title: const Text('ログアウト'),
+        onTap: () async {
+          await FirebaseAuth.instance.signOut();
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, '/login');
+        },
+      );
+
+  Widget _buildListTile(_MypageItem item) => ListTile(
+        leading: Icon(item.icon),
+        title: Text(item.title),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () => Navigator.pushNamed(context, item.route),
+      );
 }
 
 class _MypageItem {
