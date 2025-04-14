@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../models/user_profile.dart';
 
@@ -9,6 +11,13 @@ class UserProfileProvider with ChangeNotifier {
   void updateProfile(UserProfile profile) {
     _profile = profile;
     notifyListeners();
+  }
+
+  void updateAvatarFile(File file) {
+    if (_profile != null) {
+      _profile = _profile!.copyWith(avatarFile: file);
+      notifyListeners();
+    }
   }
 
   void clearProfile() {

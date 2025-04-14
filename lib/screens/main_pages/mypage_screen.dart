@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
@@ -14,24 +15,24 @@ class _MypageScreenState extends State<MypageScreen> {
   User? user;
   bool isLoading = true;
 
-  final List<_MypageItem> historyItems = [
+  final List<_MypageItem> historyItems = const [
     _MypageItem(icon: Icons.history, title: '閲覧履歴', route: '/view_history'),
     _MypageItem(icon: Icons.check_circle_outline, title: '解決履歴', route: '/solved_history'),
     _MypageItem(icon: Icons.chat, title: '相談履歴', route: '/consulted_history'),
   ];
 
-  final List<_MypageItem> paymentItems = [
+  final List<_MypageItem> paymentItems = const [
     _MypageItem(icon: Icons.card_giftcard, title: 'クーポン表示', route: '/coupon'),
     _MypageItem(icon: Icons.account_balance, title: '振込申請', route: '/payment_request'),
   ];
 
-  final List<_MypageItem> settingItems = [
+  final List<_MypageItem> settingItems = const [
     _MypageItem(icon: Icons.edit, title: 'プロフィール設定', route: '/profile_settings'),
     _MypageItem(icon: Icons.notifications, title: 'お知らせ・機能設定', route: '/notification_settings'),
     _MypageItem(icon: Icons.settings, title: '環境設定', route: '/preference_settings'),
   ];
 
-  final List<_MypageItem> policyItems = [
+  final List<_MypageItem> policyItems = const [
     _MypageItem(icon: Icons.article, title: '利用規約', route: '/terms'),
     _MypageItem(icon: Icons.privacy_tip, title: 'プライバシーポリシー', route: '/privacy_policy'),
   ];
@@ -46,7 +47,9 @@ class _MypageScreenState extends State<MypageScreen> {
     setState(() => isLoading = true);
     user = FirebaseAuth.instance.currentUser;
     await Future.delayed(const Duration(milliseconds: 300));
-    if (mounted) setState(() => isLoading = false);
+    if (mounted) {
+      setState(() => isLoading = false);
+    }
   }
 
   @override
@@ -65,10 +68,12 @@ class _MypageScreenState extends State<MypageScreen> {
                     children: [
                       CircleAvatar(
                         radius: 30,
-                        backgroundImage: profile?.avatarUrl != null
-                            ? NetworkImage(profile!.avatarUrl!)
-                            : null,
-                        child: profile?.avatarUrl == null
+                        backgroundImage: profile?.avatarFile != null
+                            ? FileImage(profile!.avatarFile!)
+                            : (user?.photoURL != null
+                                ? NetworkImage(user!.photoURL!)
+                                : null) as ImageProvider<Object>?,
+                        child: (profile?.avatarFile == null && user?.photoURL == null)
                             ? const Icon(Icons.person, size: 30)
                             : null,
                       ),
@@ -77,33 +82,36 @@ class _MypageScreenState extends State<MypageScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(profile?.name.isNotEmpty == true
-                                    ? profile!.name
-                                    : user?.displayName ?? 'ユーザー名',
-                                style: const TextStyle(fontSize: 18)),
+                            Text(
+                              profile?.name?.isNotEmpty == true
+                                  ? profile!.name!
+                                  : user?.displayName ?? 'ユーザー名',
+                              style: const TextStyle(fontSize: 18),
+                            ),
                             const SizedBox(height: 4),
-                            if (profile?.bio != null)
-                              Text(profile!.bio,
-                                  style: const TextStyle(fontSize: 14, color: Colors.grey)),
-                            if (profile?.skills.isNotEmpty == true)
+                            Text(
+                              profile?.bio ?? '',
+                              style: const TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+                            const SizedBox(height: 4),
+                            if ((profile?.skills ?? []).isNotEmpty)
                               Wrap(
                                 spacing: 6,
-                                children: profile!.skills
+                                children: profile!.skills!
                                     .map((skill) => Chip(
                                           label: Text(skill, style: const TextStyle(fontSize: 12)),
                                         ))
                                     .toList(),
                               ),
                             const SizedBox(height: 4),
-                            if (profile?.rating != null)
-                              Row(
-                                children: [
-                                  const Icon(Icons.star, color: Colors.amber, size: 16),
-                                  const SizedBox(width: 4),
-                                  Text('${profile!.rating} / 本人確認済み',
-                                      style: const TextStyle(fontSize: 14)),
-                                ],
-                              ),
+                            Row(
+                              children: [
+                                const Icon(Icons.star, color: Colors.amber, size: 16),
+                                const SizedBox(width: 4),
+                                Text('${profile?.rating ?? '4.5'} / 本人確認済み',
+                                    style: const TextStyle(fontSize: 14)),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -111,30 +119,38 @@ class _MypageScreenState extends State<MypageScreen> {
                   ),
                 ),
                 const Divider(),
+
                 const ListTile(
                   leading: Icon(Icons.account_balance_wallet),
                   title: Text('残高: ¥5,000 / ポイント: 120pt'),
                 ),
                 const Divider(),
+
                 _buildSectionTitle('履歴'),
                 ...historyItems.map(_buildListTile),
                 const Divider(),
+
                 _buildSectionTitle('支払い関係'),
                 ...paymentItems.map(_buildListTile),
                 const Divider(),
+
                 _buildSectionTitle('設定'),
                 ...settingItems.map(_buildListTile),
                 const Divider(),
+
                 _buildSectionTitle('規約'),
                 ...policyItems.map(_buildListTile),
                 const Divider(),
+
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text('ログアウト'),
                   onTap: () async {
                     await FirebaseAuth.instance.signOut();
                     if (!mounted) return;
-                    Navigator.pushReplacementNamed(context, '/login');
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(context, '/login');
+                    }
                   },
                 ),
               ],
@@ -167,9 +183,5 @@ class _MypageItem {
   final String title;
   final String route;
 
-  const _MypageItem({
-    required this.icon,
-    required this.title,
-    required this.route,
-  });
+  const _MypageItem({required this.icon, required this.title, required this.route});
 }
