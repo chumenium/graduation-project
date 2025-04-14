@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../widgets/section_title.dart';
-import '../../widgets/balance_display.dart';
+import 'package:provider/provider.dart';
+import 'package:graduation_project/providers/user_profile_provider.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -15,38 +15,25 @@ class _MypageScreenState extends State<MypageScreen> {
   bool isLoading = true;
 
   final List<_MypageItem> historyItems = [
-    const _MypageItem(
-        icon: Icons.history, title: '閲覧履歴', route: '/view_history'),
-    const _MypageItem(
-        icon: Icons.check_circle_outline,
-        title: '解決履歴',
-        route: '/solved_history'),
-    const _MypageItem(
-        icon: Icons.chat, title: '相談履歴', route: '/consulted_history'),
+    _MypageItem(icon: Icons.history, title: '閲覧履歴', route: '/view_history'),
+    _MypageItem(icon: Icons.check_circle_outline, title: '解決履歴', route: '/solved_history'),
+    _MypageItem(icon: Icons.chat, title: '相談履歴', route: '/consulted_history'),
   ];
 
   final List<_MypageItem> paymentItems = [
-    const _MypageItem(
-        icon: Icons.card_giftcard, title: 'クーポン表示', route: '/coupon'),
-    const _MypageItem(
-        icon: Icons.account_balance, title: '振込申請', route: '/payment_request'),
+    _MypageItem(icon: Icons.card_giftcard, title: 'クーポン表示', route: '/coupon'),
+    _MypageItem(icon: Icons.account_balance, title: '振込申請', route: '/payment_request'),
   ];
 
   final List<_MypageItem> settingItems = [
-    const _MypageItem(
-        icon: Icons.edit, title: 'プロフィール設定', route: '/profile_settings'),
-    const _MypageItem(
-        icon: Icons.notifications,
-        title: 'お知らせ・機能設定',
-        route: '/notification_settings'),
-    const _MypageItem(
-        icon: Icons.settings, title: '環境設定', route: '/preference_settings'),
+    _MypageItem(icon: Icons.edit, title: 'プロフィール設定', route: '/profile_settings'),
+    _MypageItem(icon: Icons.notifications, title: 'お知らせ・機能設定', route: '/notification_settings'),
+    _MypageItem(icon: Icons.settings, title: '環境設定', route: '/preference_settings'),
   ];
 
   final List<_MypageItem> policyItems = [
-    const _MypageItem(icon: Icons.article, title: '利用規約', route: '/terms'),
-    const _MypageItem(
-        icon: Icons.privacy_tip, title: 'プライバシーポリシー', route: '/privacy_policy'),
+    _MypageItem(icon: Icons.article, title: '利用規約', route: '/terms'),
+    _MypageItem(icon: Icons.privacy_tip, title: 'プライバシーポリシー', route: '/privacy_policy'),
   ];
 
   @override
@@ -63,95 +50,116 @@ class _MypageScreenState extends State<MypageScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('マイページ')),
-        body: isLoading ? _buildLoading() : _buildContent(),
-      );
+  Widget build(BuildContext context) {
+    final profile = context.watch<UserProfileProvider>().profile;
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
-
-  Widget _buildContent() => ListView(
-        children: [
-          _buildUserInfo(),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.only(left: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(title: const Text('マイページ')),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
               children: [
-                const BalanceDisplay(balance: 5000, points: 120),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: profile?.avatarUrl != null
+                            ? NetworkImage(profile!.avatarUrl!)
+                            : null,
+                        child: profile?.avatarUrl == null
+                            ? const Icon(Icons.person, size: 30)
+                            : null,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(profile?.name.isNotEmpty == true
+                                    ? profile!.name
+                                    : user?.displayName ?? 'ユーザー名',
+                                style: const TextStyle(fontSize: 18)),
+                            const SizedBox(height: 4),
+                            if (profile?.bio != null)
+                              Text(profile!.bio,
+                                  style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                            if (profile?.skills.isNotEmpty == true)
+                              Wrap(
+                                spacing: 6,
+                                children: profile!.skills
+                                    .map((skill) => Chip(
+                                          label: Text(skill, style: const TextStyle(fontSize: 12)),
+                                        ))
+                                    .toList(),
+                              ),
+                            const SizedBox(height: 4),
+                            if (profile?.rating != null)
+                              Row(
+                                children: [
+                                  const Icon(Icons.star, color: Colors.amber, size: 16),
+                                  const SizedBox(width: 4),
+                                  Text('${profile!.rating} / 本人確認済み',
+                                      style: const TextStyle(fontSize: 14)),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const Divider(),
-                _buildMenuSection('履歴', historyItems),
+                const ListTile(
+                  leading: Icon(Icons.account_balance_wallet),
+                  title: Text('残高: ¥5,000 / ポイント: 120pt'),
+                ),
                 const Divider(),
-                _buildMenuSection('支払い関係', paymentItems),
+                _buildSectionTitle('履歴'),
+                ...historyItems.map(_buildListTile),
                 const Divider(),
-                _buildMenuSection('設定', settingItems),
+                _buildSectionTitle('支払い関係'),
+                ...paymentItems.map(_buildListTile),
                 const Divider(),
-                _buildMenuSection('規約', policyItems),
+                _buildSectionTitle('設定'),
+                ...settingItems.map(_buildListTile),
                 const Divider(),
-                _buildLogoutTile(),
-              ],
-            ),
-          ),
-        ],
-      );
-
-  Widget _buildUserInfo() => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage:
-                  user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
-              child: user?.photoURL == null
-                  ? const Icon(Icons.person, size: 30)
-                  : null,
-            ),
-            const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(user?.displayName ?? 'ユーザー名',
-                    style: const TextStyle(fontSize: 18)),
-                const SizedBox(height: 4),
-                const Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.amber, size: 16),
-                    SizedBox(width: 4),
-                    Text('4.5 / 本人確認済み', style: TextStyle(fontSize: 14)),
-                  ],
+                _buildSectionTitle('規約'),
+                ...policyItems.map(_buildListTile),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.logout),
+                  title: const Text('ログアウト'),
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    if (!mounted) return;
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
                 ),
               ],
             ),
-          ],
-        ),
-      );
+    );
+  }
 
-  Widget _buildMenuSection(String title, List<_MypageItem> items) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SectionTitle(text: title),
-          ...items.map(_buildListTile),
-        ],
-      );
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
 
-  Widget _buildLogoutTile() => ListTile(
-        leading: const Icon(Icons.logout),
-        title: const Text('ログアウト'),
-        onTap: () async {
-          await FirebaseAuth.instance.signOut();
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(context, '/login');
-        },
-      );
-
-  Widget _buildListTile(_MypageItem item) => ListTile(
-        leading: Icon(item.icon),
-        title: Text(item.title),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => Navigator.pushNamed(context, item.route),
-      );
+  Widget _buildListTile(_MypageItem item) {
+    return ListTile(
+      leading: Icon(item.icon),
+      title: Text(item.title),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () => Navigator.pushNamed(context, item.route),
+    );
+  }
 }
 
 class _MypageItem {

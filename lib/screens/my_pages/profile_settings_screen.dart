@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/section_title.dart';
+import 'package:provider/provider.dart';
+import '../../models/user_profile.dart';
+import '../../providers/user_profile_provider.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({super.key});
@@ -13,58 +14,55 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _bioController = TextEditingController();
-  final List<String> _languages = [
-    'Dart',
-    'Python',
-    'JavaScript',
-    'C++',
-    'Java'
+
+  String? _selectedLanguage;
+  String? _selectedFramework;
+
+  final List<String> _selectedSkills = [];
+
+  final List<String> languages = [
+    'Python', 'JavaScript', 'Java', 'C#', 'C++', 'Dart', 'Ruby',
+    'Go', 'Swift', 'Kotlin',
   ];
-  final List<String> _frameworks = [
-    'Flutter',
-    'React',
-    'Vue',
-    'Laravel',
-    'Django'
+
+  final List<String> frameworks = [
+    'Flutter', 'React', 'Vue.js', 'Angular', 'Laravel', 'Spring',
+    'Django', 'Next.js', 'Node.js', '.NET',
   ];
-  final List<String> _selectedTechs = [];
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    _bioController.dispose();
-    super.dispose();
-  }
-
-  void _saveProfile() {
-    if (_formKey.currentState?.validate() ?? false) {
-      // 仮の保存処理
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('プロフィールを保存しました')),
-      );
+  void initState() {
+    super.initState();
+    final profile = context.read<UserProfileProvider>().profile;
+    if (profile != null) {
+      _nameController.text = profile.name;
+      _bioController.text = profile.bio;
+      _selectedSkills.addAll(profile.skills);
     }
   }
 
-  Widget _buildChips(List<String> options) {
-    return Wrap(
-      spacing: 8,
-      children: options.map((tech) {
-        final isSelected = _selectedTechs.contains(tech);
-        return FilterChip(
-          label: Text(tech),
-          selected: isSelected,
-          onSelected: (bool selected) {
-            setState(() {
-              if (selected) {
-                if (_selectedTechs.length < 10) _selectedTechs.add(tech);
-              } else {
-                _selectedTechs.remove(tech);
-              }
-            });
-          },
-        );
-      }).toList(),
-    );
+  void _addSkill(String skill) {
+    if (_selectedSkills.length < 10 && !_selectedSkills.contains(skill)) {
+      setState(() => _selectedSkills.add(skill));
+    }
+  }
+
+  void _removeSkill(String skill) {
+    setState(() => _selectedSkills.remove(skill));
+  }
+
+  void _saveProfile() {
+    if (_formKey.currentState!.validate()) {
+      final profile = UserProfile(
+        name: _nameController.text,
+        avatarUrl: null,
+        bio: _bioController.text,
+        skills: List<String>.from(_selectedSkills),
+        rating: 4.5,
+      );
+      context.read<UserProfileProvider>().updateProfile(profile);
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -73,34 +71,60 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       appBar: AppBar(title: const Text('プロフィール設定')),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SectionTitle(text: 'ユーザー名'),
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(hintText: '表示名を入力'),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? '名前を入力してください' : null,
-                ),
-                const SectionTitle(text: '自己紹介'),
-                TextFormField(
-                  controller: _bioController,
-                  maxLines: 3,
-                  decoration: const InputDecoration(hintText: '自己紹介を入力'),
-                ),
-                const SectionTitle(text: '使用言語'),
-                _buildChips(_languages),
-                const SizedBox(height: 12),
-                const SectionTitle(text: '使用フレームワーク'),
-                _buildChips(_frameworks),
-                const SizedBox(height: 24),
-                CustomButton(label: '保存する', onPressed: _saveProfile),
-              ],
-            ),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'ユーザー名'),
+                validator: (value) =>
+                    value == null || value.isEmpty ? '入力してください' : null,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _bioController,
+                decoration: const InputDecoration(labelText: '自己紹介'),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(labelText: '使用言語'),
+                items: languages.map((lang) {
+                  return DropdownMenuItem(value: lang, child: Text(lang));
+                }).toList(),
+                onChanged: (value) {
+                  _selectedLanguage = value;
+                  if (value != null) _addSkill(value);
+                },
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(labelText: '使用フレームワーク'),
+                items: frameworks.map((fw) {
+                  return DropdownMenuItem(value: fw, child: Text(fw));
+                }).toList(),
+                onChanged: (value) {
+                  _selectedFramework = value;
+                  if (value != null) _addSkill(value);
+                },
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                children: _selectedSkills
+                    .map((s) => Chip(
+                          label: Text(s),
+                          onDeleted: () => _removeSkill(s),
+                        ))
+                    .toList(),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _saveProfile,
+                child: const Text('保存'),
+              )
+            ],
           ),
         ),
       ),
