@@ -21,14 +21,19 @@ import 'screens/my_pages/payment_request_screen.dart';
 import 'screens/my_pages/terms_screen.dart';
 import 'screens/my_pages/privacy_policy_screen.dart';
 
+import 'providers/user_profile_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProfileProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+      ],
       child: const MyApp(),
     ),
   );
