@@ -1,11 +1,12 @@
 import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/user_profile.dart';
 import '../../providers/user_profile_provider.dart';
+import '../../widgets/profile_avatar.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({super.key});
@@ -100,21 +101,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               GestureDetector(
                 onTap: _pickImage,
                 child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.grey.shade400),
-                    ),
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundImage: _selectedImage != null
-                          ? FileImage(_selectedImage!)
-                          : null,
-                      child: _selectedImage == null
-                          ? const Icon(Icons.camera_alt, size: 30)
-                          : null,
-                    ),
+                  child: ProfileAvatar(
+                    imageFile: _selectedImage,
+                    radius: 40,
                   ),
                 ),
               ),

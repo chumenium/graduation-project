@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:graduation_project/providers/user_profile_provider.dart';
+import 'package:graduation_project/widgets/profile_avatar.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -66,16 +67,10 @@ class _MypageScreenState extends State<MypageScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      CircleAvatar(
+                      ProfileAvatar(
+                        imageFile: profile?.avatarFile,
+                        imageUrl: user?.photoURL,
                         radius: 30,
-                        backgroundImage: profile?.avatarFile != null
-                            ? FileImage(profile!.avatarFile!)
-                            : (user?.photoURL != null
-                                ? NetworkImage(user!.photoURL!)
-                                : null) as ImageProvider<Object>?,
-                        child: (profile?.avatarFile == null && user?.photoURL == null)
-                            ? const Icon(Icons.person, size: 30)
-                            : null,
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -119,7 +114,6 @@ class _MypageScreenState extends State<MypageScreen> {
                   ),
                 ),
                 const Divider(),
-
                 const ListTile(
                   leading: Icon(Icons.account_balance_wallet),
                   title: Text('残高: ¥5,000 / ポイント: 120pt'),
@@ -147,7 +141,6 @@ class _MypageScreenState extends State<MypageScreen> {
                   title: const Text('ログアウト'),
                   onTap: () async {
                     await FirebaseAuth.instance.signOut();
-                    if (!mounted) return;
                     if (context.mounted) {
                       Navigator.pushReplacementNamed(context, '/login');
                     }

@@ -1,21 +1,41 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import '../utils/platform_utils.dart';
 
 class ProfileAvatar extends StatelessWidget {
-  final String? imageUrl;
-  final double size;
+  final File? imageFile;       // モバイル/デスクトップ用ローカル画像ファイル
+  final String? imageUrl;      // Web用 or Firebase用URL
+  final double radius;
 
   const ProfileAvatar({
     super.key,
+    this.imageFile,
     this.imageUrl,
-    this.size = 48,
+    this.radius = 30,
   });
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider? provider;
+
+    if (PlatformUtils.isWeb) {
+      if (imageUrl != null && imageUrl!.isNotEmpty) {
+        provider = NetworkImage(imageUrl!);
+      }
+    } else {
+      if (imageFile != null) {
+        provider = FileImage(imageFile!);
+      } else if (imageUrl != null && imageUrl!.isNotEmpty) {
+        provider = NetworkImage(imageUrl!);
+      }
+    }
+
     return CircleAvatar(
-      radius: size / 2,
-      backgroundImage: imageUrl != null ? NetworkImage(imageUrl!) : null,
-      child: imageUrl == null ? const Icon(Icons.person, size: 24) : null,
+      radius: radius,
+      backgroundImage: provider,
+      child: provider == null
+          ? Icon(Icons.person, size: radius)
+          : null,
     );
   }
 }
