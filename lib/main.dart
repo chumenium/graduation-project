@@ -22,6 +22,13 @@ import 'screens/my_pages/terms_screen.dart';
 import 'screens/my_pages/privacy_policy_screen.dart';
 
 import 'providers/user_profile_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+void testFirestore() async {
+  final test = FirebaseFirestore.instance;
+  final snapshot = await test.collection('debug_test').doc('hello').get();
+  print(snapshot.exists ? 'Firestore OK' : 'Not Found');
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
