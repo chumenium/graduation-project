@@ -58,10 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     String normalize(String s) {
       return s
-        .toLowerCase()
-        .replaceAllMapped(RegExp(r'[Ａ-Ｚａ-ｚ０-９]'), (m) => String.fromCharCode(m.group(0)!.codeUnitAt(0) - 0xFEE0))
-        .replaceAll(RegExp(r'\s+'), '');
+          .toLowerCase()
+          .replaceAllMapped(RegExp(r'[Ａ-Ｚａ-ｚ０-９]'),
+              (m) => String.fromCharCode(m.group(0)!.codeUnitAt(0) - 0xFEE0))
+          .replaceAll(RegExp(r'\s+'), '');
     }
+
     final normalizedSearch = normalize(_searchText);
     final filteredPosts = _searchText.isEmpty
         ? _posts
@@ -70,34 +72,46 @@ class _HomeScreenState extends State<HomeScreen> {
             final category = normalize(p['category']!);
             final content = normalize(p['content']!);
             return title.contains(normalizedSearch) ||
-                   category.contains(normalizedSearch) ||
-                   content.contains(normalizedSearch);
+                category.contains(normalizedSearch) ||
+                content.contains(normalizedSearch);
           }).toList();
 
+    final theme = Theme.of(context);
+    final cardColor = theme.cardColor;
+    final textColor = theme.textTheme.bodyLarge?.color;
+    final bgColor = theme.scaffoldBackgroundColor;
+    final appBarColor =
+        theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface;
+    final inputBgColor = theme.inputDecorationTheme.fillColor ??
+        (theme.brightness == Brightness.dark
+            ? Colors.grey[800]
+            : Colors.grey[200]);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: appBarColor,
         elevation: 1,
         title: Container(
           height: 40,
           decoration: BoxDecoration(
-            color: const Color(0xFFF0F0F0),
+            color: inputBgColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
             children: [
               const SizedBox(width: 8),
-              const Icon(Icons.search, color: Colors.grey),
+              Icon(Icons.search, color: theme.iconTheme.color),
               const SizedBox(width: 8),
               Expanded(
                 child: TextField(
                   controller: _searchController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: '相談タイトルで検索',
                     border: InputBorder.none,
+                    hintStyle: TextStyle(color: theme.hintColor),
                   ),
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: textColor),
                 ),
               ),
             ],
@@ -110,9 +124,10 @@ class _HomeScreenState extends State<HomeScreen> {
         itemBuilder: (context, index) {
           final post = filteredPosts[index];
           return Card(
-            color: Colors.white,
+            color: cardColor,
             margin: const EdgeInsets.symmetric(vertical: 8),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             elevation: 1,
             child: Padding(
               padding: const EdgeInsets.all(12.0),
@@ -122,34 +137,50 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        child: const Icon(Icons.person, color: Colors.grey),
+                        backgroundColor: theme.brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[200],
+                        child: Icon(Icons.person, color: theme.iconTheme.color),
                       ),
                       const SizedBox(width: 8),
-                      Text(post['user']!, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(post['user']!,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: textColor)),
                       const Spacer(),
-                      Text(post['date']!, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                      Text(post['date']!,
+                          style:
+                              TextStyle(color: theme.hintColor, fontSize: 12)),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: post['category'] == 'プログラミング' ? Colors.red[50] : Colors.blue[50],
+                          color: post['category'] == 'プログラミング'
+                              ? theme.colorScheme.primary.withOpacity(0.1)
+                              : theme.colorScheme.secondary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text(post['category']!, style: const TextStyle(fontSize: 12, color: Colors.red)),
+                        child: Text(post['category']!,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: theme.colorScheme.primary)),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: Text(post['title']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        child: Text(post['title']!,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: textColor)),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(post['content']!, style: const TextStyle(color: Colors.black87)),
+                  Text(post['content']!, style: TextStyle(color: textColor)),
                 ],
               ),
             ),
