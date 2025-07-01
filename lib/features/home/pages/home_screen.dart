@@ -117,6 +117,29 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_none, color: Colors.red),
+            onPressed: () {
+              Navigator.pushNamed(context, '/notifications');
+            },
+            tooltip: '通知',
+          ),
+          IconButton(
+            icon: const Icon(Icons.forum, color: Colors.red),
+            onPressed: () {
+              Navigator.pushNamed(context, '/transactions');
+            },
+            tooltip: 'やり取り中',
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_outline, color: Colors.red),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile_settings');
+            },
+            tooltip: 'プロフィール',
+          ),
+        ],
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(12),

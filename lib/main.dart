@@ -23,6 +23,7 @@ import 'features/mypage/pages/privacy_policy_screen.dart';
 
 import 'features/mypage/provider/user_profile_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'features/profile/pages/user_profile_screen.dart';
 
 void testFirestore() async {
   final test = FirebaseFirestore.instance;
@@ -78,7 +79,7 @@ class MyApp extends StatelessWidget {
         '/consulted_history': (context) => const ConsultedHistoryScreen(),
         '/coupon': (context) => const CouponScreen(),
         '/payment_request': (context) => const PaymentRequestScreen(),
-        '/profile_settings': (context) => const ProfileSettingsScreen(),
+        '/profile_settings': (context) => const UserProfileScreen(),
         '/notification_settings': (context) =>
             const NotificationSettingsScreen(),
         '/preference_settings': (context) => const PreferenceSettingsScreen(),

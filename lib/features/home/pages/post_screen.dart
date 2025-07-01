@@ -49,7 +49,34 @@ class _PostScreenState extends State<PostScreen> {
     final textColor = theme.textTheme.bodyLarge?.color;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('新規投稿')),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: const Text('投稿'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_none, color: Colors.red),
+            onPressed: () {
+              Navigator.pushNamed(context, '/notifications');
+            },
+            tooltip: '通知',
+          ),
+          IconButton(
+            icon: const Icon(Icons.forum, color: Colors.red),
+            onPressed: () {
+              Navigator.pushNamed(context, '/transactions');
+            },
+            tooltip: 'やり取り中',
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_outline, color: Colors.red),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile_settings');
+            },
+            tooltip: 'プロフィール',
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Card(
