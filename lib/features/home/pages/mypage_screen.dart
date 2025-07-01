@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'user_profile_screen.dart';
+import '../../mypage/pages/user_profile_screen.dart';
 
 class MypageScreen extends StatelessWidget {
   const MypageScreen({Key? key}) : super(key: key);
