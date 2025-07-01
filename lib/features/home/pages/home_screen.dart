@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'consultation_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -146,65 +147,58 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: filteredPosts.length,
         itemBuilder: (context, index) {
           final post = filteredPosts[index];
-          return Card(
-            color: cardColor,
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: theme.brightness == Brightness.dark
-                            ? Colors.grey[800]
-                            : Colors.grey[200],
-                        child: Icon(Icons.person, color: theme.iconTheme.color),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(post['user']!,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: textColor)),
-                      const Spacer(),
-                      Text(post['date']!,
-                          style:
-                              TextStyle(color: theme.hintColor, fontSize: 12)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: post['category'] == 'プログラミング'
-                              ? theme.colorScheme.primary.withOpacity(0.1)
-                              : theme.colorScheme.secondary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ConsultationDetailScreen(post: post),
+                ),
+              );
+            },
+            child: Card(
+              color: Colors.white,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              elevation: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey[200],
+                          child: const Icon(Icons.person, color: Colors.grey),
                         ),
-                        child: Text(post['category']!,
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: theme.colorScheme.primary)),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(post['title']!,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: textColor)),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(post['content']!, style: TextStyle(color: textColor)),
-                ],
+                        const SizedBox(width: 8),
+                        Text(post['user']!, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        const Spacer(),
+                        Text(post['date']!, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: post['category'] == 'プログラミング' ? Colors.red[50] : Colors.blue[50],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(post['category']!, style: const TextStyle(fontSize: 12, color: Colors.red)),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(post['title']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(post['content']!, style: const TextStyle(color: Colors.black87)),
+                  ],
+                ),
               ),
             ),
           );
