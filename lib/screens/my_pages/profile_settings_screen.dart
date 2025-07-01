@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/user_profile.dart';
-import '../../providers/user_profile_provider.dart';
+import '../../data/models/user_profile.dart';
+import '../../features/mypage/provider/user_profile_provider.dart';
 import '../../widgets/profile_avatar.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-import 'solved_screen.dart';
-import 'post_screen.dart';
-import 'payment_screen.dart';
-import 'mypage_screen.dart';
+import '../../features/home/pages/home_screen.dart';
+import '../../features/home/pages/solved_screen.dart';
+import '../../features/home/pages/post_screen.dart';
+import '../../features/home/pages/payment_screen.dart';
+import '../../features/home/pages/mypage_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});

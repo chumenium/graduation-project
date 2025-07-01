@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/models/consultation_model.dart';
+import '../data/models/user_profile.dart';
 
 class ConsultationCard extends StatelessWidget {
   final Consultation consultation;

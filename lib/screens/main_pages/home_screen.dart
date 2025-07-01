@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/consultation_model.dart';
+import '../../data/models/consultation_model.dart';
 import '../../widgets/consultation_card.dart';
 
 class HomeScreen extends StatelessWidget {
