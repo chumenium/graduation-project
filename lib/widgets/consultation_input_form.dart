@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/models/consultation_model.dart';
 
 class ConsultationInputForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;

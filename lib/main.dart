@@ -6,22 +6,22 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'utils/theme_notifier.dart';
 
-import 'screens/auth_pages/login_page.dart';
-import 'screens/main_pages/main_navigation.dart';
+import 'features/auth/pages/login_page.dart';
+import 'features/home/pages/main_navigation.dart';
 
 // ▼ マイページ内遷移先
-import 'screens/my_pages/preference_settings_screen.dart';
-import 'screens/my_pages/profile_settings_screen.dart';
-import 'screens/my_pages/notification_settings_screen.dart';
-import 'screens/my_pages/view_history_screen.dart';
-import 'screens/my_pages/solved_history_screen.dart';
-import 'screens/my_pages/consulted_history_screen.dart';
-import 'screens/my_pages/coupon_screen.dart';
-import 'screens/my_pages/payment_request_screen.dart';
-import 'screens/my_pages/terms_screen.dart';
-import 'screens/my_pages/privacy_policy_screen.dart';
+import 'features/mypage/pages/preference_settings_screen.dart';
+import 'features/mypage/pages/profile_settings_screen.dart';
+import 'features/mypage/pages/notification_settings_screen.dart';
+import 'features/mypage/pages/view_history_screen.dart';
+import 'features/mypage/pages/solved_history_screen.dart';
+import 'features/mypage/pages/consulted_history_screen.dart';
+import 'features/mypage/pages/coupon_screen.dart';
+import 'features/mypage/pages/payment_request_screen.dart';
+import 'features/mypage/pages/terms_screen.dart';
+import 'features/mypage/pages/privacy_policy_screen.dart';
 
-import 'providers/user_profile_provider.dart';
+import 'features/mypage/provider/user_profile_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void testFirestore() async {

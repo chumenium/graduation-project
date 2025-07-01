@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import '../models/user_profile.dart';
+import '../data/models/user_profile.dart';
 
 class UserProfileProvider with ChangeNotifier {
   UserProfile? _profile;

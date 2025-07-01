@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../utils/platform_utils.dart';
+import '../core/platform_utils.dart';
 
 class ProfileAvatar extends StatelessWidget {
   final File? imageFile;       // モバイル/デスクトップ用ローカル画像ファイル
