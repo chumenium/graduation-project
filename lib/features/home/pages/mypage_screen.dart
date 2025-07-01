@@ -78,7 +78,7 @@ class MypageScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.edit, color: theme.iconTheme.color),
                   onPressed: () {
-                    // プロフィール編集画面へ遷移
+                    Navigator.pushNamed(context, '/profile_settings');
                   },
                 ),
               ],
