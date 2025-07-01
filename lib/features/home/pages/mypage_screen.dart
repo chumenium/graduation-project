@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'user_profile_screen.dart';
 
 class MypageScreen extends StatelessWidget {
   const MypageScreen({Key? key}) : super(key: key);
@@ -43,11 +44,22 @@ class MypageScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('ユーザー名',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: textColor)),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const UserProfileScreen()),
+                          );
+                        },
+                        child: Text('ユーザー名',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: textColor,
+                                decoration: TextDecoration.underline)),
+                      ),
                       const SizedBox(height: 4),
                       Text('自己紹介文が入ります',
                           style: TextStyle(fontSize: 14, color: subTextColor)),

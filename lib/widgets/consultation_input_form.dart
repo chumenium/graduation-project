@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../data/models/consultation_model.dart';
 
 class ConsultationInputForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -26,7 +25,8 @@ class ConsultationInputForm extends StatelessWidget {
           TextFormField(
             controller: titleController,
             decoration: const InputDecoration(labelText: 'タイトル'),
-            validator: (value) => value == null || value.isEmpty ? 'タイトルを入力してください' : null,
+            validator: (value) =>
+                value == null || value.isEmpty ? 'タイトルを入力してください' : null,
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
@@ -43,7 +43,8 @@ class ConsultationInputForm extends StatelessWidget {
             controller: descriptionController,
             decoration: const InputDecoration(labelText: '相談内容'),
             maxLines: 5,
-            validator: (value) => value == null || value.isEmpty ? '相談内容を入力してください' : null,
+            validator: (value) =>
+                value == null || value.isEmpty ? '相談内容を入力してください' : null,
           ),
         ],
       ),

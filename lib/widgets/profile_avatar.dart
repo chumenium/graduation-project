@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../core/platform_utils.dart';
-import '../data/models/user_profile.dart';
 
 class ProfileAvatar extends StatelessWidget {
-  final File? imageFile;       // モバイル/デスクトップ用ローカル画像ファイル
-  final String? imageUrl;      // Web用 or Firebase用URL
+  final File? imageFile; // モバイル/デスクトップ用ローカル画像ファイル
+  final String? imageUrl; // Web用 or Firebase用URL
   final double radius;
 
   const ProfileAvatar({
@@ -34,9 +33,7 @@ class ProfileAvatar extends StatelessWidget {
     return CircleAvatar(
       radius: radius,
       backgroundImage: provider,
-      child: provider == null
-          ? Icon(Icons.person, size: radius)
-          : null,
+      child: provider == null ? Icon(Icons.person, size: radius) : null,
     );
   }
 }
