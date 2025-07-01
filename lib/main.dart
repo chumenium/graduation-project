@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
-import 'utils/theme_notifier.dart';
+import 'core/theme_notifier.dart';
 
 import 'features/auth/pages/login_page.dart';
 import 'features/home/pages/main_navigation.dart';
