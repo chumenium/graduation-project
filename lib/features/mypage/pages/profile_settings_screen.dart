@@ -12,6 +12,7 @@ class ProfileSettingsScreen extends StatefulWidget {
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   final TextEditingController _nameController =
       TextEditingController(text: 'ユーザー名');
+  final TextEditingController _bioController = TextEditingController(text: '');
   File? _imageFile;
 
   Future<void> _pickImage() async {
@@ -63,6 +64,16 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 labelText: 'ユーザー名',
                 border: OutlineInputBorder(),
               ),
+              style: TextStyle(color: textColor),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _bioController,
+              decoration: const InputDecoration(
+                labelText: '自己紹介文',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
               style: TextStyle(color: textColor),
             ),
             const SizedBox(height: 32),

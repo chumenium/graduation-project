@@ -50,7 +50,8 @@ class _PostScreenState extends State<PostScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor:
+            theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
         elevation: 1,
         title: const Text('投稿'),
         actions: [

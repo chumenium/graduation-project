@@ -30,7 +30,8 @@ class SolvedScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor:
+            theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
         elevation: 1,
         title: const Text('解決済み'),
         actions: [

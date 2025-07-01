@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class ConsultationDetailScreen extends StatefulWidget {
   final Map<String, String> post;
-  const ConsultationDetailScreen({Key? key, required this.post}) : super(key: key);
+  const ConsultationDetailScreen({Key? key, required this.post})
+      : super(key: key);
 
   @override
-  State<ConsultationDetailScreen> createState() => _ConsultationDetailScreenState();
+  State<ConsultationDetailScreen> createState() =>
+      _ConsultationDetailScreenState();
 }
 
 class _Comment {
@@ -14,16 +16,30 @@ class _Comment {
   final String userIconUrl;
   final String text;
   final bool isOwner;
-  _Comment({required this.userId, required this.userName, required this.userIconUrl, required this.text, required this.isOwner});
+  _Comment(
+      {required this.userId,
+      required this.userName,
+      required this.userIconUrl,
+      required this.text,
+      required this.isOwner});
 }
 
 class _ConsultationDetailScreenState extends State<ConsultationDetailScreen> {
   int likes = 0;
   bool liked = false;
   final List<_Comment> comments = [
-    
-    _Comment(userId: '1', userName: '出品者', userIconUrl: '', text: 'もちろんです。', isOwner: true),
-    _Comment(userId: '2', userName: 'ユーザーA', userIconUrl: '', text: '詳細を教えてください', isOwner: false),
+    _Comment(
+        userId: '1',
+        userName: '出品者',
+        userIconUrl: '',
+        text: 'もちろんです。',
+        isOwner: true),
+    _Comment(
+        userId: '2',
+        userName: 'ユーザーA',
+        userIconUrl: '',
+        text: '詳細を教えてください',
+        isOwner: false),
   ];
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -47,7 +63,8 @@ class _ConsultationDetailScreenState extends State<ConsultationDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('相談詳細'),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor ??
+            Theme.of(context).colorScheme.surface,
         elevation: 1,
         actions: [
           IconButton(
@@ -78,24 +95,44 @@ class _ConsultationDetailScreenState extends State<ConsultationDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(post['title'] ?? '', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(post['title'] ?? '',
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).textTheme.bodyLarge?.color)),
             const SizedBox(height: 8),
             Row(
               children: [
-                Chip(label: Text(post['category'] ?? '')),
+                Chip(
+                  label: Text(post['category'] ?? '',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary)),
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.blueGrey[900]
+                          : Colors.blue[50],
+                ),
                 const SizedBox(width: 8),
-                Text(post['user'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(post['user'] ?? '',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.bodyLarge?.color)),
                 const Spacer(),
-                Text(post['date'] ?? '', style: const TextStyle(color: Colors.grey)),
+                Text(post['date'] ?? '',
+                    style: TextStyle(color: Theme.of(context).hintColor)),
               ],
             ),
             const SizedBox(height: 16),
-            Text(post['content'] ?? '', style: const TextStyle(fontSize: 16)),
+            Text(post['content'] ?? '',
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).textTheme.bodyLarge?.color)),
             const SizedBox(height: 24),
             Row(
               children: [
                 IconButton(
-                  icon: Icon(liked ? Icons.favorite : Icons.favorite_border, color: Colors.red),
+                  icon: Icon(liked ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.red),
                   onPressed: () {
                     setState(() {
                       liked = !liked;
@@ -140,10 +177,12 @@ class _ConsultationDetailScreenState extends State<ConsultationDetailScreen> {
             const SizedBox(height: 8),
             Card(
               elevation: 1,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               child: Container(
                 padding: const EdgeInsets.all(8),
-                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.4),
                 child: ListView.builder(
                   shrinkWrap: true,
                   reverse: false,
@@ -151,18 +190,31 @@ class _ConsultationDetailScreenState extends State<ConsultationDetailScreen> {
                   itemBuilder: (context, idx) {
                     final c = comments[idx];
                     return Align(
-                      alignment: c.isOwner ? Alignment.centerLeft : Alignment.centerRight,
+                      alignment: c.isOwner
+                          ? Alignment.centerLeft
+                          : Alignment.centerRight,
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         padding: const EdgeInsets.all(10),
-                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.7),
                         decoration: BoxDecoration(
-                          color: c.isOwner ? Colors.grey[200] : Colors.blue[100],
+                          color: c.isOwner
+                              ? (Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.grey[800]
+                                  : Colors.grey[200])
+                              : (Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.blue[900]
+                                  : Colors.blue[100]),
                           borderRadius: BorderRadius.only(
                             topLeft: const Radius.circular(16),
                             topRight: const Radius.circular(16),
-                            bottomLeft: c.isOwner ? const Radius.circular(0) : const Radius.circular(16),
-                            bottomRight: c.isOwner ? const Radius.circular(16) : const Radius.circular(0),
+                            bottomLeft: c.isOwner
+                                ? const Radius.circular(0)
+                                : const Radius.circular(16),
+                            bottomRight: c.isOwner
+                                ? const Radius.circular(16)
+                                : const Radius.circular(0),
                           ),
                         ),
                         child: Row(
@@ -170,13 +222,21 @@ class _ConsultationDetailScreenState extends State<ConsultationDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (c.isOwner) ...[
-                              _UserIconAndName(iconUrl: c.userIconUrl, userName: c.userName),
+                              _UserIconAndName(
+                                  iconUrl: c.userIconUrl, userName: c.userName),
                               const SizedBox(width: 8),
                             ],
-                            Expanded(child: Text(c.text)),
+                            Expanded(
+                                child: Text(c.text,
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.color))),
                             if (!c.isOwner) ...[
                               const SizedBox(width: 8),
-                              _UserIconAndName(iconUrl: c.userIconUrl, userName: c.userName),
+                              _UserIconAndName(
+                                  iconUrl: c.userIconUrl, userName: c.userName),
                             ],
                           ],
                         ),
@@ -202,13 +262,15 @@ class _ConsultationDetailScreenState extends State<ConsultationDetailScreen> {
                   onPressed: () {
                     if (_commentController.text.isNotEmpty) {
                       setState(() {
-                        comments.insert(0, _Comment(
-                          userId: currentUserId,
-                          userName: currentUserName,
-                          userIconUrl: currentUserIconUrl,
-                          text: _commentController.text,
-                          isOwner: currentUserId == ownerUserId,
-                        ));
+                        comments.insert(
+                            0,
+                            _Comment(
+                              userId: currentUserId,
+                              userName: currentUserName,
+                              userIconUrl: currentUserIconUrl,
+                              text: _commentController.text,
+                              isOwner: currentUserId == ownerUserId,
+                            ));
                         _commentController.clear();
                       });
                     }
@@ -222,9 +284,15 @@ class _ConsultationDetailScreenState extends State<ConsultationDetailScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.grey,
+        backgroundColor:
+            Theme.of(context).bottomNavigationBarTheme.backgroundColor ??
+                Theme.of(context).colorScheme.surface,
+        selectedItemColor:
+            Theme.of(context).bottomNavigationBarTheme.selectedItemColor ??
+                Theme.of(context).colorScheme.primary,
+        unselectedItemColor:
+            Theme.of(context).bottomNavigationBarTheme.unselectedItemColor ??
+                Theme.of(context).unselectedWidgetColor,
         currentIndex: 0,
         onTap: (index) {
           switch (index) {
@@ -269,13 +337,22 @@ class _UserIconAndName extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 14,
-          backgroundColor: Colors.grey[300],
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? Colors.grey[800]
+              : Colors.grey[300],
           backgroundImage: iconUrl.isNotEmpty ? NetworkImage(iconUrl) : null,
-          child: iconUrl.isEmpty ? const Icon(Icons.person, size: 16, color: Colors.grey) : null,
+          child: iconUrl.isEmpty
+              ? Icon(Icons.person,
+                  size: 16, color: Theme.of(context).iconTheme.color)
+              : null,
         ),
         const SizedBox(width: 4),
-        Text(userName, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+        Text(userName,
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.bodyLarge?.color)),
       ],
     );
   }
-} 
+}

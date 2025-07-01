@@ -21,7 +21,8 @@ class PaymentScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor:
+            theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
         elevation: 1,
         title: const Text('決済'),
         actions: [

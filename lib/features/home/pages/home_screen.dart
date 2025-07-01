@@ -157,9 +157,10 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
             child: Card(
-              color: Colors.white,
+              color: cardColor,
               margin: const EdgeInsets.symmetric(vertical: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               elevation: 1,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -169,34 +170,55 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: Colors.grey[200],
-                          child: const Icon(Icons.person, color: Colors.grey),
+                          backgroundColor: theme.brightness == Brightness.dark
+                              ? Colors.grey[800]
+                              : Colors.grey[200],
+                          child:
+                              Icon(Icons.person, color: theme.iconTheme.color),
                         ),
                         const SizedBox(width: 8),
-                        Text(post['user']!, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(post['user']!,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, color: textColor)),
                         const Spacer(),
-                        Text(post['date']!, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                        Text(post['date']!,
+                            style: TextStyle(
+                                color: theme.hintColor, fontSize: 12)),
                       ],
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: post['category'] == 'プログラミング' ? Colors.red[50] : Colors.blue[50],
+                            color: post['category'] == 'プログラミング'
+                                ? (theme.brightness == Brightness.dark
+                                    ? Colors.red[900]
+                                    : Colors.red[50])
+                                : (theme.brightness == Brightness.dark
+                                    ? Colors.blue[900]
+                                    : Colors.blue[50]),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text(post['category']!, style: const TextStyle(fontSize: 12, color: Colors.red)),
+                          child: Text(post['category']!,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: theme.colorScheme.primary)),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(post['title']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          child: Text(post['title']!,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: textColor)),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(post['content']!, style: const TextStyle(color: Colors.black87)),
+                    Text(post['content']!, style: TextStyle(color: textColor)),
                   ],
                 ),
               ),
