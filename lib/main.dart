@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
         '/consulted_history': (context) => const ConsultedHistoryScreen(),
         '/coupon': (context) => const CouponScreen(),
         '/payment_request': (context) => const PaymentRequestScreen(),
-        '/profile_settings': (context) => const UserProfileScreen(),
+        '/profile_settings': (context) => const ProfileSettingsScreen(),
         '/notification_settings': (context) =>
             const NotificationSettingsScreen(),
         '/preference_settings': (context) => const PreferenceSettingsScreen(),
