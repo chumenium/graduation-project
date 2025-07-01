@@ -1,111 +1,161 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = '';
+
+  final List<Map<String, String>> _posts = [
+    {
+      'user': '山田太郎',
+      'avatar': '',
+      'title': 'Pythonのfor文について',
+      'category': 'プログラミング',
+      'content': 'for文の使い方が分かりません。',
+      'date': '2025/04/10',
+    },
+    {
+      'user': '佐藤花子',
+      'avatar': '',
+      'title': 'SSD換装後のトラブル',
+      'category': 'PC相談',
+      'content': 'SSDを換装したらOSが起動しません。',
+      'date': '2025/04/09',
+    },
+    {
+      'user': '田中一郎',
+      'avatar': '',
+      'title': 'Flutterで画像が表示されない',
+      'category': 'プログラミング',
+      'content': 'Image.assetで画像が出ません。',
+      'date': '2025/04/08',
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      setState(() {
+        _searchText = _searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cardColor = theme.cardColor;
-    final textColor = theme.textTheme.bodyLarge?.color;
-    // 仮の投稿リスト（他ユーザー含む）
-    final List<Map<String, String>> posts = [
-      {
-        'user': '山田太郎',
-        'avatar': '',
-        'title': 'Pythonのfor文について',
-        'category': 'プログラミング',
-        'content': 'for文の使い方が分かりません。',
-        'date': '2025/04/10',
-      },
-      {
-        'user': '佐藤花子',
-        'avatar': '',
-        'title': 'SSD換装後のトラブル',
-        'category': 'PC相談',
-        'content': 'SSDを換装したらOSが起動しません。',
-        'date': '2025/04/09',
-      },
-      {
-        'user': '田中一郎',
-        'avatar': '',
-        'title': 'Flutterで画像が表示されない',
-        'category': 'プログラミング',
-        'content': 'Image.assetで画像が出ません。',
-        'date': '2025/04/08',
-      },
-    ];
+    String normalize(String s) {
+      return s
+        .toLowerCase()
+        .replaceAllMapped(RegExp(r'[Ａ-Ｚａ-ｚ０-９]'), (m) => String.fromCharCode(m.group(0)!.codeUnitAt(0) - 0xFEE0))
+        .replaceAll(RegExp(r'\s+'), '');
+    }
+    final normalizedSearch = normalize(_searchText);
+    final filteredPosts = _searchText.isEmpty
+        ? _posts
+        : _posts.where((p) {
+            final title = normalize(p['title']!);
+            final category = normalize(p['category']!);
+            final content = normalize(p['content']!);
+            return title.contains(normalizedSearch) ||
+                   category.contains(normalizedSearch) ||
+                   content.contains(normalizedSearch);
+          }).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('ホーム')),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(12),
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          final post = posts[index];
-          return Card(
-            color: cardColor,
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: ListTile(
-              leading: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const UserProfileScreen()),
-                  );
-                },
-                child: CircleAvatar(
-                  backgroundColor: theme.brightness == Brightness.dark
-                      ? Colors.grey[800]
-                      : Colors.grey[200],
-                  child: const Icon(Icons.person, color: Colors.grey),
+      backgroundColor: const Color(0xFFF5F5F5),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0F0F0),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 8),
+              const Icon(Icons.search, color: Colors.grey),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    hintText: '相談タイトルで検索',
+                    border: InputBorder.none,
+                  ),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
-              title: Text(post['title']!,
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: textColor)),
-              subtitle: Column(
+            ],
+          ),
+        ),
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: filteredPosts.length,
+        itemBuilder: (context, index) {
+          final post = filteredPosts[index];
+          return Card(
+            color: Colors.white,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: post['category'] == 'プログラミング'
-                              ? Colors.blue[100]
-                              : Colors.green[100],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(post['category']!,
-                            style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold)),
+                      CircleAvatar(
+                        backgroundColor: Colors.grey[200],
+                        child: const Icon(Icons.person, color: Colors.grey),
                       ),
                       const SizedBox(width: 8),
-                      Text(post['user']!, style: const TextStyle(fontSize: 12)),
+                      Text(post['user']!, style: const TextStyle(fontWeight: FontWeight.bold)),
                       const Spacer(),
-                      Text(post['date']!,
-                          style: const TextStyle(
-                              fontSize: 12, color: Colors.grey)),
+                      Text(post['date']!, style: const TextStyle(color: Colors.grey, fontSize: 12)),
                     ],
                   ),
-                  const SizedBox(height: 6),
-                  Text(post['content']!, style: TextStyle(color: textColor)),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: post['category'] == 'プログラミング' ? Colors.red[50] : Colors.blue[50],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(post['category']!, style: const TextStyle(fontSize: 12, color: Colors.red)),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(post['title']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(post['content']!, style: const TextStyle(color: Colors.black87)),
                 ],
               ),
-              isThreeLine: true,
-              onTap: () {
-                // 投稿詳細画面などに遷移する場合はここで実装
-              },
             ),
           );
         },
       ),
-      backgroundColor: theme.scaffoldBackgroundColor,
     );
   }
 }
