@@ -5,45 +5,66 @@ class MypageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final bgColor = theme.scaffoldBackgroundColor;
+    final cardColor = theme.cardColor;
+    final textColor = theme.textTheme.bodyLarge?.color;
+    final subTextColor = theme.textTheme.bodySmall?.color?.withOpacity(0.7);
+
     return Scaffold(
       appBar: AppBar(title: const Text('マイページ')),
       body: ListView(
         children: [
           // プロフィールエリア
           Container(
-            color: Colors.white,
+            color: cardColor,
             padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
             child: Row(
               children: [
-                const CircleAvatar(
-                  radius: 32,
-                  backgroundImage:
-                      AssetImage('assets/default_avatar.png'), // 仮画像
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UserProfileScreen()),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 32,
+                    backgroundColor:
+                        isDark ? Colors.grey[800] : Colors.grey[200],
+                    child:
+                        const Icon(Icons.person, size: 40, color: Colors.grey),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text('ユーザー名',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 4),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: textColor)),
+                      const SizedBox(height: 4),
                       Text('自己紹介文が入ります',
-                          style: TextStyle(fontSize: 14, color: Colors.grey)),
-                      SizedBox(height: 8),
+                          style: TextStyle(fontSize: 14, color: subTextColor)),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
-                          Icon(Icons.star, color: Colors.amber, size: 16),
-                          SizedBox(width: 4),
-                          Text('4.8', style: TextStyle(fontSize: 14)),
+                          const Icon(Icons.star, color: Colors.amber, size: 16),
+                          const SizedBox(width: 4),
+                          Text('4.8',
+                              style: TextStyle(fontSize: 14, color: textColor)),
                         ],
                       ),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.edit),
+                  icon: Icon(Icons.edit, color: theme.iconTheme.color),
                   onPressed: () {
                     // プロフィール編集画面へ遷移
                   },
@@ -77,33 +98,36 @@ class MypageScreen extends StatelessWidget {
           // ログアウト
           const Divider(height: 1),
           ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('ログアウト'),
+            leading: Icon(Icons.logout, color: theme.iconTheme.color),
+            title: Text('ログアウト', style: TextStyle(color: textColor)),
             onTap: () {
               // ログアウト処理
             },
           ),
         ],
       ),
-      backgroundColor: Colors.grey[100],
+      backgroundColor: bgColor,
     );
   }
 
   Widget _buildMenuSection(
       BuildContext context, String title, List<_MenuItem> items) {
+    final theme = Theme.of(context);
+    final textColor = theme.textTheme.bodyLarge?.color;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(title,
-              style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
         ),
         ...items.map((item) => ListTile(
-              leading: Icon(item.icon),
-              title: Text(item.title),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              leading: Icon(item.icon, color: theme.iconTheme.color),
+              title: Text(item.title, style: TextStyle(color: textColor)),
+              trailing: Icon(Icons.arrow_forward_ios,
+                  size: 16, color: theme.iconTheme.color),
               onTap: () {
                 Navigator.pushNamed(context, item.route);
               },
@@ -119,4 +143,100 @@ class _MenuItem {
   final String title;
   final String route;
   const _MenuItem(this.icon, this.title, this.route);
+}
+
+// 出品者ページ風の画面
+class UserProfileScreen extends StatelessWidget {
+  const UserProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cardColor = theme.cardColor;
+    final textColor = theme.textTheme.bodyLarge?.color;
+    // 仮の投稿リスト
+    final List<Map<String, String>> posts = [
+      {
+        'title': 'Pythonのfor文について',
+        'category': 'プログラミング',
+        'content': 'for文の使い方が分かりません。'
+      },
+      {
+        'title': 'SSD換装後のトラブル',
+        'category': 'PC相談',
+        'content': 'SSDを換装したらOSが起動しません。'
+      },
+    ];
+    return Scaffold(
+      appBar: AppBar(title: const Text('ユーザーページ')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          // プロフィール表示
+          Card(
+            color: cardColor,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 32,
+                    backgroundColor: theme.brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.grey[200],
+                    child:
+                        const Icon(Icons.person, size: 40, color: Colors.grey),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('ユーザー名',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: textColor)),
+                        const SizedBox(height: 4),
+                        Text('自己紹介文が入ります',
+                            style: TextStyle(fontSize: 14, color: textColor)),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.star,
+                                color: Colors.amber, size: 16),
+                            const SizedBox(width: 4),
+                            Text('4.8',
+                                style:
+                                    TextStyle(fontSize: 14, color: textColor)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text('投稿一覧',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          ...posts.map((post) => Card(
+                color: cardColor,
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                child: ListTile(
+                  title:
+                      Text(post['title']!, style: TextStyle(color: textColor)),
+                  subtitle: Text('${post['category']}\n${post['content']}',
+                      style: TextStyle(color: textColor)),
+                ),
+              )),
+        ],
+      ),
+      backgroundColor: theme.scaffoldBackgroundColor,
+    );
+  }
 }
