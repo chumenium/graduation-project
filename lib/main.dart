@@ -71,8 +71,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       themeMode: themeNotifier.themeMode,
-      home: const MainNavigation(),
-      // home: const AuthGate(), // ← 本番用はこちらに切り替え
+      // home: const MainNavigation(),
+      home: const AuthGate(), // ← 本番用はこちらに切り替え
       routes: {
         '/view_history': (context) => const ViewHistoryScreen(),
         '/solved_history': (context) => const SolvedHistoryScreen(),
